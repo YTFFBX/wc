@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<string.h> 
+/*
+获取filename文件中的单词数目
+返回值：单词数[字符串数] 
+*/
+int GetWords(char *filename) {
+	FILE *fp;
+	int index = 0;
+	char str[10000];
+	//打开文件 
+	if ((fp=fopen("file.c","r"))==NULL) {	
+        printf("不能打开file.c文件\n");
+        return 0;
+    }
+    while(!feof(fp)) { 
+		fscanf(fp,"%s",str);
+		//printf("%d\n",strlen(str)); 
+		if(strlen(str) == 0) {
+			index = 0;
+			break;
+		}
+		index++; 
+	}
+	//关闭文件 
+	fclose(fp);
+	return index;
+}
+
+/*
+获取filename文件中的字符数+行数(找\n数+1) 
+无返回值 
+*/
+void GetCsAndLines(char *filename,int &cs,int &lines) {
+	FILE *fp1;
+	char c;
+	if ((fp1=fopen("file.c","r"))==NULL) {	
+        printf("不能打开file.c文件\n");
+        return;
+    }
+    while((c = fgetc(fp1)) != EOF) {
+    	if(c != ' ') {
+    		cs++; 	
+		}
+    	if(c == '\n') {
+    		lines++;
+		}
+	}
+	//因为要算上最后一行 
+	lines++;
+	//此时的cs是算上了换行字符\n
+	if(cs != 0) cs -= (lines-1); 
+} 
+int main() {
+	//定义文件名 
+	char filename[100];
+	//测试：C:\Users\mibook\Desktop\wc\file.c
+	printf("请输入文件路径：\n"); 
+	scanf("%s",&filename);
+	//字符数 
+	int cs = 0; 
+	//单词数 
+	int words = 0;
+	//行数
+	int lines = 0;
+
+	GetCsAndLines(filename,cs,lines);
+	
+	printf("%s文件的字符数：%d\n",filename,cs);
+	
+	words = GetWords(filename);
+	printf("%s文件的词数：%d\n",filename,words);
+	
+	printf("%s文件的行数：%d\n",filename,lines);
+} 
